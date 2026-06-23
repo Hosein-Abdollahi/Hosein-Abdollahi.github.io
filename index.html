@@ -261,8 +261,11 @@
   #sound-toggle.on:hover{color:#0a0118; background:var(--cyan)}
 
   @media (max-width:680px){
-    .proj{flex:0 0 86%}
-    .cbtn{font-size:11px; padding:14px 9px}
+    .carousel{flex-wrap:wrap; justify-content:center; align-items:center; gap:14px}
+    .ctrack{flex:1 0 100%; order:0; padding:18px 0}
+    .proj{flex:0 0 86%; max-width:none}
+    .cbtn{order:1; font-size:12px; padding:14px 26px}
+    .cbtn.next{order:2}
     .hc-digits{font-size:12px; letter-spacing:3px}
     #sound-toggle{font-size:8px; padding:8px 10px}
   }
