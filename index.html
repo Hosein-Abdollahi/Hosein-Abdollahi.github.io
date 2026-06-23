@@ -191,14 +191,31 @@
     .gpa i,.road .fill{transition:width .01s, height .01s}
     html{scroll-behavior:auto}
   }
-  .proj-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px}
+  .carousel{display:flex; align-items:stretch; gap:10px}
+  .ctrack{
+    display:flex; gap:24px; flex:1; overflow-x:auto; overflow-y:hidden;
+    scroll-snap-type:x mandatory; scroll-behavior:smooth;
+    padding:22px 6px; scrollbar-width:none;
+  }
+  .ctrack::-webkit-scrollbar{display:none}
+  .cbtn{
+    flex:0 0 auto; align-self:center; cursor:pointer;
+    font-family:var(--display); font-size:14px; color:var(--text);
+    background:var(--panel-2); border:3px solid var(--violet);
+    box-shadow:3px 3px 0 rgba(0,0,0,.6); padding:18px 14px;
+    transition:transform .1s steps(2), background .1s steps(2), color .1s steps(2), opacity .1s steps(2);
+  }
+  .cbtn:hover, .cbtn:focus-visible{transform:translate(-2px,-2px); background:var(--violet); color:#0a0118; outline:none}
+  .cbtn.disabled{opacity:.25; pointer-events:none}
+  .cstage{font-family:var(--display); font-size:11px; color:var(--cyan); text-align:center; margin-top:16px; letter-spacing:3px; text-shadow:0 0 8px var(--cyan)}
   .proj{
+    flex:0 0 78%; max-width:520px; scroll-snap-align:center;
     display:flex; flex-direction:column; text-decoration:none;
     background:linear-gradient(160deg,var(--panel),var(--panel-2));
     border:3px solid var(--violet);
     box-shadow:0 0 0 3px var(--bg-void), 0 0 0 6px var(--line), 8px 8px 0 rgba(0,0,0,.5), 0 0 22px rgba(157,78,221,.2);
-    padding:0; overflow:hidden;
-    transition:transform .1s steps(2), box-shadow .1s steps(2);
+    overflow:hidden;
+    transition:transform .12s steps(2), box-shadow .12s steps(2);
   }
   a.proj:hover, a.proj:focus-visible{
     transform:translate(-4px,-4px);
@@ -244,7 +261,8 @@
   #sound-toggle.on:hover{color:#0a0118; background:var(--cyan)}
 
   @media (max-width:680px){
-    .proj-grid{grid-template-columns:1fr}
+    .proj{flex:0 0 86%}
+    .cbtn{font-size:11px; padding:14px 9px}
     .hc-digits{font-size:12px; letter-spacing:3px}
     #sound-toggle{font-size:8px; padding:8px 10px}
   }
@@ -377,34 +395,39 @@
   </section>
 
   <section id="projects">
-    <div class="eyebrow">▣ PROJECTS</div>
-    <div class="proj-grid">
+    <div class="eyebrow">▣ PROJECTS — STAGE SELECT</div>
+    <div class="carousel">
+      <button class="cbtn prev" aria-label="Previous project">◄</button>
+      <div class="ctrack" id="ptrack">
 
-      <a class="proj reveal" href="https://github.com/Hosein-Abdollahi/Narrative-Resonance" target="_blank" rel="noopener">
-        <div class="proj-bar"><span class="proj-emoji">🎨</span> NARRATIVE RESONANCE</div>
-        <p class="proj-desc">What color is your text? An NLP tool that reads a text's emotional content and turns it into a unique color palette — encoding an 8-dimensional emotion vector into HSL color space, with an emotion breakdown and a sentence-by-sentence emotional arc.</p>
-        <div class="proj-tags">
-          <span class="ptag">NLP</span><span class="ptag">Python</span>
-          <span class="ptag">Sentiment Analysis</span><span class="ptag">Plotly</span>
+        <a class="proj" href="https://github.com/Hosein-Abdollahi/Narrative-Resonance" target="_blank" rel="noopener">
+          <div class="proj-bar"><span class="proj-emoji">🎨</span> NARRATIVE RESONANCE</div>
+          <p class="proj-desc">What color is your text? An NLP tool that reads a text's emotional content and turns it into a unique color palette — encoding an 8-dimensional emotion vector into HSL color space, with an emotion breakdown and a sentence-by-sentence emotional arc.</p>
+          <div class="proj-tags">
+            <span class="ptag">NLP</span><span class="ptag">Python</span>
+            <span class="ptag">Sentiment Analysis</span><span class="ptag">Plotly</span>
+          </div>
+          <span class="proj-link">VIEW REPO →</span>
+        </a>
+
+        <div class="proj locked">
+          <div class="proj-bar"><span class="proj-emoji">🔒</span> ??? — LOCKED</div>
+          <p class="proj-desc">A new quest is being prepared. Check back soon.</p>
+          <div class="proj-tags"><span class="ptag">COMING SOON</span></div>
+          <span class="proj-link dim">UNLOCK PENDING</span>
         </div>
-        <span class="proj-link">VIEW REPO →</span>
-      </a>
 
-      <div class="proj locked reveal">
-        <div class="proj-bar"><span class="proj-emoji">🔒</span> ??? — LOCKED</div>
-        <p class="proj-desc">A new quest is being prepared. Check back soon.</p>
-        <div class="proj-tags"><span class="ptag">COMING SOON</span></div>
-        <span class="proj-link dim">UNLOCK PENDING</span>
+        <div class="proj locked">
+          <div class="proj-bar"><span class="proj-emoji">🔒</span> ??? — LOCKED</div>
+          <p class="proj-desc">A new quest is being prepared. Check back soon.</p>
+          <div class="proj-tags"><span class="ptag">COMING SOON</span></div>
+          <span class="proj-link dim">UNLOCK PENDING</span>
+        </div>
+
       </div>
-
-      <div class="proj locked reveal">
-        <div class="proj-bar"><span class="proj-emoji">🔒</span> ??? — LOCKED</div>
-        <p class="proj-desc">A new quest is being prepared. Check back soon.</p>
-        <div class="proj-tags"><span class="ptag">COMING SOON</span></div>
-        <span class="proj-link dim">UNLOCK PENDING</span>
-      </div>
-
+      <button class="cbtn next" aria-label="Next project">►</button>
     </div>
+    <div class="cstage">STAGE <span id="cstage-cur">01</span> / <span id="cstage-total">03</span></div>
   </section>
 
   <section id="contact">
@@ -580,13 +603,54 @@ const SFX = (function(){
     setState(on);
     if(on) SFX.power();
   });
-  const hoverSel = 'nav a, .links a, .tag, .ptag, a.proj, #sound-toggle';
+  const hoverSel = 'nav a, .links a, .tag, .ptag, a.proj, .cbtn, #sound-toggle';
   document.querySelectorAll(hoverSel).forEach(el=>{
     el.addEventListener('mouseenter', ()=>SFX.hover());
   });
-  document.querySelectorAll('nav a, .links a, a.proj').forEach(el=>{
+  document.querySelectorAll('nav a, .links a, a.proj, .cbtn').forEach(el=>{
     el.addEventListener('click', ()=>SFX.click());
   });
+})();
+
+(function carousel(){
+  const track = document.getElementById('ptrack');
+  if(!track) return;
+  const cards = Array.from(track.querySelectorAll('.proj'));
+  const prev = document.querySelector('.cbtn.prev');
+  const next = document.querySelector('.cbtn.next');
+  const curEl = document.getElementById('cstage-cur');
+  const totalEl = document.getElementById('cstage-total');
+  let i = 0;
+  totalEl.textContent = String(cards.length).padStart(2,'0');
+  function clamp(n){ return Math.max(0, Math.min(cards.length-1, n)); }
+  function update(){
+    curEl.textContent = String(i+1).padStart(2,'0');
+    prev.classList.toggle('disabled', i===0);
+    next.classList.toggle('disabled', i===cards.length-1);
+  }
+  function go(n){
+    i = clamp(n);
+    cards[i].scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+    update();
+  }
+  prev.addEventListener('click', ()=>go(i-1));
+  next.addEventListener('click', ()=>go(i+1));
+  let raf;
+  track.addEventListener('scroll', ()=>{
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(()=>{
+      const tr = track.getBoundingClientRect();
+      const center = tr.left + tr.width/2;
+      let best=0, bestDist=Infinity;
+      cards.forEach((c,idx)=>{
+        const r = c.getBoundingClientRect();
+        const d = Math.abs((r.left + r.width/2) - center);
+        if(d < bestDist){ bestDist = d; best = idx; }
+      });
+      i = best; update();
+    });
+  });
+  update();
 })();
 
 (function hitCounter(){
