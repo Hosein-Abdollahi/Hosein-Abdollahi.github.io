@@ -43,14 +43,11 @@
     position:relative;
     min-height:100vh;
   }
-
-  /* drifting pixel starfield sits behind everything */
   #stars{
     position:fixed; inset:0;
     z-index:-2;
     display:block;
   }
-  /* soft purple→blue glow wash over the void */
   .wash{
     position:fixed; inset:0; z-index:-1; pointer-events:none;
     background:
@@ -58,7 +55,6 @@
       radial-gradient(70% 60% at 100% 110%, rgba(67,97,238,.28), transparent 70%),
       radial-gradient(50% 40% at 0% 80%, rgba(199,125,255,.18), transparent 70%);
   }
-  /* CRT scanlines + vignette overlay */
   .crt{
     position:fixed; inset:0; z-index:9998; pointer-events:none;
     background:repeating-linear-gradient(
@@ -69,8 +65,6 @@
     position:fixed; inset:0; z-index:9997; pointer-events:none;
     box-shadow:inset 0 0 220px rgba(0,0,0,.85);
   }
-
-  /* ---------- boot sequence ---------- */
   #boot{
     position:fixed; inset:0; z-index:10000;
     background:var(--bg-void);
@@ -88,8 +82,7 @@
   }
   #boot.done{opacity:0; pointer-events:none}
   @keyframes blink{50%{opacity:0}}
-
-  /* ---------- nav ---------- */
+  
   nav{
     position:fixed; top:0; left:0; right:0; z-index:500;
     display:flex; gap:6px; justify-content:center; flex-wrap:wrap;
@@ -111,11 +104,9 @@
   }
   nav a:hover::before, nav a:focus-visible::before{opacity:1}
 
-  /* ---------- layout shell ---------- */
   main{max-width:var(--maxw); margin:0 auto; padding:120px 20px 80px}
   section{margin-bottom:84px}
 
-  /* pixel panel: hard double border + offset shadow, zero radius */
   .panel{
     background:linear-gradient(160deg,var(--panel),var(--panel-2));
     border:3px solid var(--violet);
@@ -127,7 +118,6 @@
     padding:28px;
   }
 
-  /* section heading as a "menu label" */
   .eyebrow{
     font-family:var(--display); font-size:11px; color:var(--cyan);
     letter-spacing:1px; margin-bottom:18px;
@@ -138,7 +128,6 @@
     border-top:3px dashed var(--line);
   }
 
-  /* ---------- hero / player card ---------- */
   .hero{
     display:grid; grid-template-columns:auto 1fr; gap:34px; align-items:center;
   }
@@ -158,7 +147,7 @@
     color:var(--text); position:relative; cursor:default;
     text-shadow:3px 3px 0 var(--blue), -2px -2px 0 rgba(199,125,255,.5);
   }
-  /* glitch on hover */
+  
   .name:hover{animation:glitch .3s steps(2) 2}
   @keyframes glitch{
     20%{transform:translate(-3px,1px); text-shadow:3px 0 var(--cyan),-3px 0 var(--magenta)}
@@ -173,7 +162,6 @@
   .class .cursor{color:var(--cyan); animation:blink 1s steps(1) infinite}
   .tagline{font-size:22px; color:var(--dim); margin-top:14px; max-width:46ch}
 
-  /* level + xp bar */
   .level-row{display:flex; align-items:center; gap:14px; margin-top:22px; flex-wrap:wrap}
   .lvl{font-family:var(--display); font-size:12px; color:var(--cyan)}
   .xp{
@@ -185,13 +173,12 @@
     background:repeating-linear-gradient(90deg,var(--violet) 0 8px,var(--violet-bright) 8px 16px);
     transition:width 1.4s steps(20);
   }
-  .xp.in-view i{width:78%}            /* EDIT: your XP toward next level */
+  .xp.in-view i{width:78%}     
   .xp span{
     position:absolute; right:8px; top:50%; transform:translateY(-50%);
     font-size:18px; color:var(--text); text-shadow:1px 1px 0 #000;
   }
 
-  /* ---------- stat bars ---------- */
   .stats{display:grid; grid-template-columns:1fr 1fr; gap:18px 30px}
   .stat .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px}
   .stat .lbl{font-family:var(--display); font-size:10px; color:var(--text)}
@@ -204,7 +191,6 @@
     transition:width 1.2s steps(16);
   }
 
-  /* ---------- quest log (experience) ---------- */
   .quest{
     border-left:3px solid var(--line); padding:0 0 4px 26px; position:relative;
     margin-bottom:30px;
@@ -230,7 +216,6 @@
     border:2px solid var(--line); padding:3px 10px;
   }
 
-  /* ---------- inventory (skills tags) & achievements ---------- */
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:30px}
   .tags{display:flex; flex-wrap:wrap; gap:10px; margin-top:4px}
   .tag{
@@ -245,7 +230,6 @@
   .ach h4{font-family:var(--display); font-size:11px; color:var(--text); line-height:1.5}
   .ach p{color:var(--dim); font-size:19px}
 
-  /* ---------- contact ---------- */
   .contact{text-align:center}
   .links{display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:24px}
   .links a{
@@ -268,11 +252,9 @@
   }
   footer .heart{color:var(--violet-bright)}
 
-  /* ---------- scroll reveal ---------- */
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .5s steps(6), transform .5s steps(6)}
   .reveal.in-view{opacity:1; transform:none}
 
-  /* ---------- responsive ---------- */
   @media (max-width:680px){
     body{font-size:20px}
     .hero{grid-template-columns:1fr; text-align:center; justify-items:center}
@@ -284,7 +266,6 @@
     nav a{font-size:8px; padding:6px 6px}
   }
 
-  /* ---------- respect reduced motion ---------- */
   @media (prefers-reduced-motion:reduce){
     *{animation:none !important}
     .reveal{opacity:1; transform:none; transition:none}
@@ -299,7 +280,6 @@
 <canvas id="stars"></canvas>
 <div class="wash"></div>
 
-<!-- boot sequence -->
 <div id="boot" role="status" aria-label="Loading">
   <div class="blines"></div>
   <div class="start">▶ PRESS START</div>
@@ -315,19 +295,14 @@
 
 <main>
 
-  <!-- ============ HERO / PLAYER CARD ============ -->
   <section id="top">
     <div class="panel hero reveal">
       <div class="portrait"><canvas id="avatar" width="16" height="16"></canvas></div>
       <div>
-        <!-- EDIT: your name -->
-        <h1 class="name">JORDAN PARK</h1>
-        <!-- EDIT: typewriter rotates through your titles (script, TITLES array) -->
+        <h1 class="name">HOSEIN ABDOLLAHI</h1>
         <div class="class" id="class"></div>
-        <!-- EDIT: one-line summary -->
         <p class="tagline">Full-stack developer turning caffeine and curiosity into shipped products. Five years deep in the dungeon of the web.</p>
         <div class="level-row">
-          <!-- EDIT: your "level" (e.g. years of experience) -->
           <span class="lvl">LVL 5</span>
           <div class="xp"><i></i><span>NEXT: SENIOR</span></div>
         </div>
@@ -335,13 +310,11 @@
     </div>
   </section>
 
-  <!-- ============ STATS ============ -->
   <section id="stats">
     <div class="eyebrow">▣ CORE STATS</div>
     <div class="panel reveal">
-      <!-- EDIT: each .stat is a skill. data-fill = percentage 0–100 -->
       <div class="stats">
-        <div class="stat"><div class="top"><span class="lbl">JAVASCRIPT</span><span class="val">92</span></div><div class="bar" data-fill="92"><i></i></div></div>
+        <div class="stat"><div class="top"><span class="lbl">JAVASCRIP</span><span class="val">92</span></div><div class="bar" data-fill="92"><i></i></div></div>
         <div class="stat"><div class="top"><span class="lbl">PYTHON</span><span class="val">85</span></div><div class="bar" data-fill="85"><i></i></div></div>
         <div class="stat"><div class="top"><span class="lbl">REACT</span><span class="val">88</span></div><div class="bar" data-fill="88"><i></i></div></div>
         <div class="stat"><div class="top"><span class="lbl">SQL / DBs</span><span class="val">80</span></div><div class="bar" data-fill="80"><i></i></div></div>
@@ -351,12 +324,10 @@
     </div>
   </section>
 
-  <!-- ============ QUEST LOG / EXPERIENCE ============ -->
   <section id="quests">
     <div class="eyebrow">▣ QUEST LOG</div>
     <div class="panel reveal">
 
-      <!-- EDIT: duplicate a .quest block for each job -->
       <div class="quest">
         <h3>Senior Software Engineer</h3>
         <div class="meta">Nebula Labs</div>
@@ -395,14 +366,13 @@
     </div>
   </section>
 
-  <!-- ============ INVENTORY (skills) + ACHIEVEMENTS (education) ============ -->
   <section id="inventory">
     <div class="eyebrow">▣ INVENTORY &amp; ACHIEVEMENTS</div>
     <div class="grid2">
 
       <div class="panel reveal">
         <h3 style="font-family:var(--display);font-size:12px;color:var(--cyan);margin-bottom:14px">TOOLS &amp; SPELLS</h3>
-        <!-- EDIT: your tools / tech / soft skills -->
+
         <div class="tags">
           <span class="tag">TypeScript</span><span class="tag">Node.js</span>
           <span class="tag">Docker</span><span class="tag">AWS</span>
@@ -414,7 +384,7 @@
 
       <div class="panel reveal">
         <h3 style="font-family:var(--display);font-size:12px;color:var(--cyan);margin-bottom:14px">ACHIEVEMENTS</h3>
-        <!-- EDIT: education, certs, awards -->
+
         <div class="ach"><span class="ico">🎓</span><div><h4>B.Sc. Computer Science</h4><p>State University · 2020</p></div></div>
         <div class="ach"><span class="ico">🏆</span><div><h4>Hackathon Winner</h4><p>CodeQuest 2022 · Best UX</p></div></div>
         <div class="ach"><span class="ico">📜</span><div><h4>AWS Certified Developer</h4><p>Associate · 2023</p></div></div>
@@ -423,15 +393,13 @@
     </div>
   </section>
 
-  <!-- ============ CONTACT ============ -->
   <section id="contact">
     <div class="panel contact reveal">
       <div class="eyebrow" style="justify-content:center">▣ START A NEW GAME</div>
       <p class="tagline" style="margin:0 auto">Got a quest for me? Let's team up.</p>
-      <!-- EDIT: your real links -->
       <div class="links">
         <a href="mailto:you@example.com">EMAIL</a>
-        <a href="https://github.com/yourname" target="_blank" rel="noopener">GITHUB</a>
+        <a href="https://github.com/Hosein-Abdollahi" target="_blank" rel="noopener">GITHUB</a>
         <a href="https://linkedin.com/in/yourname" target="_blank" rel="noopener">LINKEDIN</a>
         <a href="/resume.pdf" target="_blank" rel="noopener">RESUME.PDF</a>
       </div>
@@ -441,7 +409,6 @@
 </main>
 
 <footer>
-  <!-- EDIT: footer -->
   GAME OVER? NEVER. · Built with <span class="heart">♥</span> &amp; pixels · © <span id="yr"></span> JORDAN PARK
 </footer>
 
@@ -451,15 +418,8 @@
 <script>
 "use strict";
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/* ---------- footer year ---------- */
 document.getElementById('yr').textContent = new Date().getFullYear();
 
-/* ============================================================
-   PIXEL AVATAR  —  edit like a coloring grid (16x16).
-   key:  . transparent   h hood   H hood-lite   s skin
-         e eyes(glow)     b beard  r robe        R robe-lite   g gem
-   ============================================================ */
 const SPRITE = [
   "................",
   "......hhhh......",
@@ -491,9 +451,9 @@ const PAL = {
   });
 })();
 
-/* ---------- typewriter for class/title ---------- */
-const TITLES = [          // EDIT: rotates through these
-  "FULL-STACK DEVELOPER",
+
+const TITLES = [ 
+  "ML DEVELOPER",
   "PROBLEM SOLVER",
   "PIXEL WRANGLER",
   "TEAM PLAYER"
@@ -514,7 +474,6 @@ const TITLES = [          // EDIT: rotates through these
   tick();
 })();
 
-/* ---------- scroll reveal + bar fills ---------- */
 const io = new IntersectionObserver((entries)=>{
   entries.forEach(e=>{
     if(!e.isIntersecting) return;
@@ -526,12 +485,10 @@ const io = new IntersectionObserver((entries)=>{
   });
 },{threshold:.18});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-// flip the xp bar to filled when it scrolls into view
 new IntersectionObserver((es,o)=>{
   es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in-view'); o.unobserve(e.target); } });
 },{threshold:.3}).observe(document.querySelector('.xp'));
 
-/* ---------- drifting pixel starfield ---------- */
 (function starfield(){
   const cv = document.getElementById('stars');
   const ctx = cv.getContext('2d');
@@ -541,7 +498,7 @@ new IntersectionObserver((es,o)=>{
     const n = Math.min(150, Math.floor(w*h/9000));
     stars = Array.from({length:n},()=>({
       x:Math.random()*w, y:Math.random()*h,
-      z:Math.random()*2+1,                 // depth → size & speed
+      z:Math.random()*2+1,            
       c:Math.random()<.5?'#c77dff':(Math.random()<.5?'#4cc9f0':'#9d4edd')
     }));
   }
@@ -568,7 +525,6 @@ new IntersectionObserver((es,o)=>{
   reduced ? drawStatic() : frame();
 })();
 
-/* ---------- boot sequence ---------- */
 (function boot(){
   const box = document.getElementById('boot');
   const out = box.querySelector('.blines');
@@ -594,7 +550,7 @@ new IntersectionObserver((es,o)=>{
     if(ci>line.length){ out.textContent+='\n'; li++; ci=0; setTimeout(type,140); }
     else setTimeout(type, 18);
   })();
-  box.addEventListener('click', dismiss);  // skip on click
+  box.addEventListener('click', dismiss);
 })();
 </script>
 </body>
