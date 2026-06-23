@@ -1,10 +1,601 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Site</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jordan Park — Character Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg-void:#08010f;
+    --bg-deep:#120630;
+    --panel:#170a38;
+    --panel-2:#1f0e4a;
+    --line:#3a1d7a;
+    --violet:#9d4edd;
+    --violet-bright:#c77dff;
+    --magenta:#e0aaff;
+    --blue:#4361ee;
+    --cyan:#4cc9f0;
+    --text:#ece4ff;
+    --dim:#9a86c9;
+
+    --display:'Press Start 2P', monospace;
+    --body:'VT323', monospace;
+
+    --maxw:920px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  html{scroll-behavior:smooth}
+
+  body{
+    background:var(--bg-void);
+    color:var(--text);
+    font-family:var(--body);
+    font-size:22px;
+    line-height:1.35;
+    overflow-x:hidden;
+    position:relative;
+    min-height:100vh;
+  }
+
+  /* drifting pixel starfield sits behind everything */
+  #stars{
+    position:fixed; inset:0;
+    z-index:-2;
+    display:block;
+  }
+  /* soft purple→blue glow wash over the void */
+  .wash{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(60% 50% at 50% -10%, rgba(157,78,221,.35), transparent 70%),
+      radial-gradient(70% 60% at 100% 110%, rgba(67,97,238,.28), transparent 70%),
+      radial-gradient(50% 40% at 0% 80%, rgba(199,125,255,.18), transparent 70%);
+  }
+  /* CRT scanlines + vignette overlay */
+  .crt{
+    position:fixed; inset:0; z-index:9998; pointer-events:none;
+    background:repeating-linear-gradient(
+      to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.18) 2px 4px);
+    mix-blend-mode:multiply;
+  }
+  .vignette{
+    position:fixed; inset:0; z-index:9997; pointer-events:none;
+    box-shadow:inset 0 0 220px rgba(0,0,0,.85);
+  }
+
+  /* ---------- boot sequence ---------- */
+  #boot{
+    position:fixed; inset:0; z-index:10000;
+    background:var(--bg-void);
+    display:flex; flex-direction:column;
+    justify-content:center; align-items:flex-start;
+    padding:8vw;
+    font-family:var(--body); font-size:24px;
+    color:var(--violet-bright);
+    transition:opacity .5s steps(4);
+  }
+  #boot .blines{white-space:pre-wrap; text-shadow:0 0 8px var(--violet)}
+  #boot .start{
+    margin-top:24px; font-family:var(--display); font-size:13px;
+    color:var(--cyan); opacity:0; animation:blink 1s steps(1) infinite;
+  }
+  #boot.done{opacity:0; pointer-events:none}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:500;
+    display:flex; gap:6px; justify-content:center; flex-wrap:wrap;
+    padding:12px; background:rgba(8,1,15,.7);
+    border-bottom:2px solid var(--line);
+    backdrop-filter:blur(4px);
+  }
+  nav a{
+    font-family:var(--display); font-size:9px;
+    color:var(--dim); text-decoration:none;
+    padding:8px 10px; letter-spacing:.5px;
+    border:2px solid transparent;
+    transition:color .12s steps(2), border-color .12s steps(2), background .12s steps(2);
+  }
+  nav a::before{content:'▸ '; color:var(--violet-bright); opacity:0}
+  nav a:hover, nav a:focus-visible{
+    color:var(--text); border-color:var(--violet); background:var(--panel);
+    outline:none;
+  }
+  nav a:hover::before, nav a:focus-visible::before{opacity:1}
+
+  /* ---------- layout shell ---------- */
+  main{max-width:var(--maxw); margin:0 auto; padding:120px 20px 80px}
+  section{margin-bottom:84px}
+
+  /* pixel panel: hard double border + offset shadow, zero radius */
+  .panel{
+    background:linear-gradient(160deg,var(--panel),var(--panel-2));
+    border:3px solid var(--violet);
+    box-shadow:
+      0 0 0 3px var(--bg-void),
+      0 0 0 6px var(--line),
+      10px 10px 0 rgba(0,0,0,.5),
+      0 0 28px rgba(157,78,221,.25);
+    padding:28px;
+  }
+
+  /* section heading as a "menu label" */
+  .eyebrow{
+    font-family:var(--display); font-size:11px; color:var(--cyan);
+    letter-spacing:1px; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::after{
+    content:''; flex:1; height:0;
+    border-top:3px dashed var(--line);
+  }
+
+  /* ---------- hero / player card ---------- */
+  .hero{
+    display:grid; grid-template-columns:auto 1fr; gap:34px; align-items:center;
+  }
+  .portrait{
+    border:3px solid var(--violet-bright);
+    box-shadow:0 0 0 3px var(--bg-void), 0 0 0 6px var(--violet),
+               0 0 30px rgba(199,125,255,.5);
+    background:radial-gradient(circle at 50% 30%, #2a1257, #0c0322);
+    padding:14px; image-rendering:pixelated;
+    animation:bob 2.4s steps(2) infinite alternate;
+  }
+  @keyframes bob{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+  #avatar{display:block; width:160px; height:160px; image-rendering:pixelated}
+
+  .name{
+    font-family:var(--display); font-size:30px; line-height:1.25;
+    color:var(--text); position:relative; cursor:default;
+    text-shadow:3px 3px 0 var(--blue), -2px -2px 0 rgba(199,125,255,.5);
+  }
+  /* glitch on hover */
+  .name:hover{animation:glitch .3s steps(2) 2}
+  @keyframes glitch{
+    20%{transform:translate(-3px,1px); text-shadow:3px 0 var(--cyan),-3px 0 var(--magenta)}
+    40%{transform:translate(3px,-1px); text-shadow:-3px 0 var(--cyan),3px 0 var(--magenta)}
+    60%{transform:translate(-2px,0)}
+    100%{transform:translate(0)}
+  }
+  .class{
+    font-family:var(--display); font-size:12px; color:var(--violet-bright);
+    margin-top:14px; min-height:1.4em;
+  }
+  .class .cursor{color:var(--cyan); animation:blink 1s steps(1) infinite}
+  .tagline{font-size:22px; color:var(--dim); margin-top:14px; max-width:46ch}
+
+  /* level + xp bar */
+  .level-row{display:flex; align-items:center; gap:14px; margin-top:22px; flex-wrap:wrap}
+  .lvl{font-family:var(--display); font-size:12px; color:var(--cyan)}
+  .xp{
+    flex:1; min-width:180px; height:22px; background:var(--bg-void);
+    border:3px solid var(--line); position:relative; overflow:hidden;
+  }
+  .xp i{
+    position:absolute; inset:0; width:0;
+    background:repeating-linear-gradient(90deg,var(--violet) 0 8px,var(--violet-bright) 8px 16px);
+    transition:width 1.4s steps(20);
+  }
+  .xp.in-view i{width:78%}            /* EDIT: your XP toward next level */
+  .xp span{
+    position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    font-size:18px; color:var(--text); text-shadow:1px 1px 0 #000;
+  }
+
+  /* ---------- stat bars ---------- */
+  .stats{display:grid; grid-template-columns:1fr 1fr; gap:18px 30px}
+  .stat .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px}
+  .stat .lbl{font-family:var(--display); font-size:10px; color:var(--text)}
+  .stat .val{font-size:20px; color:var(--violet-bright)}
+  .bar{height:18px; background:var(--bg-void); border:3px solid var(--line); position:relative; overflow:hidden}
+  .bar i{
+    position:absolute; left:0; top:0; bottom:0; width:0;
+    background:linear-gradient(90deg,var(--blue),var(--violet),var(--violet-bright));
+    box-shadow:0 0 12px rgba(199,125,255,.6);
+    transition:width 1.2s steps(16);
+  }
+
+  /* ---------- quest log (experience) ---------- */
+  .quest{
+    border-left:3px solid var(--line); padding:0 0 4px 26px; position:relative;
+    margin-bottom:30px;
+  }
+  .quest::before{
+    content:''; position:absolute; left:-11px; top:6px;
+    width:16px; height:16px; background:var(--violet-bright);
+    box-shadow:0 0 0 3px var(--bg-void), 0 0 0 6px var(--violet), 0 0 16px var(--violet-bright);
+    image-rendering:pixelated;
+  }
+  .quest:last-child{border-left-color:transparent}
+  .quest h3{font-family:var(--display); font-size:14px; color:var(--text); line-height:1.5}
+  .quest .meta{color:var(--cyan); font-size:20px; margin:6px 0 4px}
+  .quest .when{color:var(--dim); font-size:18px; letter-spacing:.5px}
+  .quest ul{list-style:none; margin-top:12px}
+  .quest li{position:relative; padding-left:22px; margin-bottom:6px; color:var(--text)}
+  .quest li::before{
+    content:'+'; position:absolute; left:0; color:var(--violet-bright);
+    font-family:var(--display); font-size:11px; top:4px;
+  }
+  .reward{
+    display:inline-block; margin-top:10px; font-size:18px; color:var(--cyan);
+    border:2px solid var(--line); padding:3px 10px;
+  }
+
+  /* ---------- inventory (skills tags) & achievements ---------- */
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:30px}
+  .tags{display:flex; flex-wrap:wrap; gap:10px; margin-top:4px}
+  .tag{
+    font-family:var(--body); font-size:19px; color:var(--text);
+    border:2px solid var(--violet); background:var(--bg-void);
+    padding:4px 12px; box-shadow:3px 3px 0 rgba(0,0,0,.5);
+    transition:transform .1s steps(2), background .1s steps(2), color .1s steps(2);
+  }
+  .tag:hover{transform:translate(-2px,-2px); background:var(--violet); color:#0a0118}
+  .ach{display:flex; gap:14px; align-items:flex-start; margin-bottom:18px}
+  .ach .ico{font-size:26px; line-height:1; filter:drop-shadow(0 0 8px var(--violet))}
+  .ach h4{font-family:var(--display); font-size:11px; color:var(--text); line-height:1.5}
+  .ach p{color:var(--dim); font-size:19px}
+
+  /* ---------- contact ---------- */
+  .contact{text-align:center}
+  .links{display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:24px}
+  .links a{
+    font-family:var(--display); font-size:11px; text-decoration:none;
+    color:var(--text); background:var(--panel-2);
+    border:3px solid var(--violet); padding:14px 18px;
+    box-shadow:5px 5px 0 rgba(0,0,0,.6), 0 0 18px rgba(157,78,221,.3);
+    transition:transform .1s steps(2), box-shadow .1s steps(2),
+               background .1s steps(2), color .1s steps(2);
+  }
+  .links a:hover, .links a:focus-visible{
+    transform:translate(-3px,-3px);
+    box-shadow:8px 8px 0 rgba(0,0,0,.6), 0 0 26px var(--violet);
+    background:var(--violet); color:#0a0118; outline:none;
+  }
+
+  footer{
+    text-align:center; color:var(--dim); font-size:18px;
+    padding:40px 20px; border-top:2px solid var(--line);
+  }
+  footer .heart{color:var(--violet-bright)}
+
+  /* ---------- scroll reveal ---------- */
+  .reveal{opacity:0; transform:translateY(26px); transition:opacity .5s steps(6), transform .5s steps(6)}
+  .reveal.in-view{opacity:1; transform:none}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:680px){
+    body{font-size:20px}
+    .hero{grid-template-columns:1fr; text-align:center; justify-items:center}
+    .name{font-size:22px}
+    .stats{grid-template-columns:1fr}
+    .grid2{grid-template-columns:1fr}
+    #avatar{width:128px; height:128px}
+    nav{gap:2px; padding:8px}
+    nav a{font-size:8px; padding:6px 6px}
+  }
+
+  /* ---------- respect reduced motion ---------- */
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important}
+    .reveal{opacity:1; transform:none; transition:none}
+    .portrait{animation:none}
+    .xp i,.bar i{transition:width .01s}
+    html{scroll-behavior:auto}
+  }
+</style>
 </head>
 <body>
-    <h1>Hello, world!</h1>
-    <p>This is my first GitHub Pages site.</p>
+
+<canvas id="stars"></canvas>
+<div class="wash"></div>
+
+<!-- boot sequence -->
+<div id="boot" role="status" aria-label="Loading">
+  <div class="blines"></div>
+  <div class="start">▶ PRESS START</div>
+</div>
+
+<nav aria-label="Sections">
+  <a href="#top">PLAYER</a>
+  <a href="#stats">STATS</a>
+  <a href="#quests">QUEST LOG</a>
+  <a href="#inventory">INVENTORY</a>
+  <a href="#contact">CONTACT</a>
+</nav>
+
+<main>
+
+  <!-- ============ HERO / PLAYER CARD ============ -->
+  <section id="top">
+    <div class="panel hero reveal">
+      <div class="portrait"><canvas id="avatar" width="16" height="16"></canvas></div>
+      <div>
+        <!-- EDIT: your name -->
+        <h1 class="name">JORDAN PARK</h1>
+        <!-- EDIT: typewriter rotates through your titles (script, TITLES array) -->
+        <div class="class" id="class"></div>
+        <!-- EDIT: one-line summary -->
+        <p class="tagline">Full-stack developer turning caffeine and curiosity into shipped products. Five years deep in the dungeon of the web.</p>
+        <div class="level-row">
+          <!-- EDIT: your "level" (e.g. years of experience) -->
+          <span class="lvl">LVL 5</span>
+          <div class="xp"><i></i><span>NEXT: SENIOR</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section id="stats">
+    <div class="eyebrow">▣ CORE STATS</div>
+    <div class="panel reveal">
+      <!-- EDIT: each .stat is a skill. data-fill = percentage 0–100 -->
+      <div class="stats">
+        <div class="stat"><div class="top"><span class="lbl">JAVASCRIPT</span><span class="val">92</span></div><div class="bar" data-fill="92"><i></i></div></div>
+        <div class="stat"><div class="top"><span class="lbl">PYTHON</span><span class="val">85</span></div><div class="bar" data-fill="85"><i></i></div></div>
+        <div class="stat"><div class="top"><span class="lbl">REACT</span><span class="val">88</span></div><div class="bar" data-fill="88"><i></i></div></div>
+        <div class="stat"><div class="top"><span class="lbl">SQL / DBs</span><span class="val">80</span></div><div class="bar" data-fill="80"><i></i></div></div>
+        <div class="stat"><div class="top"><span class="lbl">CLOUD / DEVOPS</span><span class="val">74</span></div><div class="bar" data-fill="74"><i></i></div></div>
+        <div class="stat"><div class="top"><span class="lbl">UI / DESIGN</span><span class="val">70</span></div><div class="bar" data-fill="70"><i></i></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUEST LOG / EXPERIENCE ============ -->
+  <section id="quests">
+    <div class="eyebrow">▣ QUEST LOG</div>
+    <div class="panel reveal">
+
+      <!-- EDIT: duplicate a .quest block for each job -->
+      <div class="quest">
+        <h3>Senior Software Engineer</h3>
+        <div class="meta">Nebula Labs</div>
+        <div class="when">2023 — PRESENT · Remote</div>
+        <ul>
+          <li>Led rebuild of the core platform, cutting page load time by 60%.</li>
+          <li>Mentored 4 junior devs and ran the weekly code-review guild.</li>
+          <li>Shipped a real-time analytics dashboard used by 12k+ users.</li>
+        </ul>
+        <span class="reward">⮕ REWARD: Team Lead unlocked</span>
+      </div>
+
+      <div class="quest">
+        <h3>Full-Stack Developer</h3>
+        <div class="meta">Pixel Forge Studio</div>
+        <div class="when">2021 — 2023 · Berlin</div>
+        <ul>
+          <li>Built and maintained 8 client web apps end-to-end.</li>
+          <li>Introduced automated testing, dropping production bugs by 40%.</li>
+          <li>Designed the component library still used company-wide.</li>
+        </ul>
+        <span class="reward">⮕ REWARD: +500 XP</span>
+      </div>
+
+      <div class="quest">
+        <h3>Junior Developer</h3>
+        <div class="meta">Startup Quest Inc.</div>
+        <div class="when">2020 — 2021 · Remote</div>
+        <ul>
+          <li>First dev hire — built the MVP that landed seed funding.</li>
+          <li>Wore every hat: frontend, backend, and the occasional support ticket.</li>
+        </ul>
+        <span class="reward">⮕ REWARD: Quest begins</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ INVENTORY (skills) + ACHIEVEMENTS (education) ============ -->
+  <section id="inventory">
+    <div class="eyebrow">▣ INVENTORY &amp; ACHIEVEMENTS</div>
+    <div class="grid2">
+
+      <div class="panel reveal">
+        <h3 style="font-family:var(--display);font-size:12px;color:var(--cyan);margin-bottom:14px">TOOLS &amp; SPELLS</h3>
+        <!-- EDIT: your tools / tech / soft skills -->
+        <div class="tags">
+          <span class="tag">TypeScript</span><span class="tag">Node.js</span>
+          <span class="tag">Docker</span><span class="tag">AWS</span>
+          <span class="tag">PostgreSQL</span><span class="tag">Git</span>
+          <span class="tag">Figma</span><span class="tag">GraphQL</span>
+          <span class="tag">Tailwind</span><span class="tag">Redis</span>
+        </div>
+      </div>
+
+      <div class="panel reveal">
+        <h3 style="font-family:var(--display);font-size:12px;color:var(--cyan);margin-bottom:14px">ACHIEVEMENTS</h3>
+        <!-- EDIT: education, certs, awards -->
+        <div class="ach"><span class="ico">🎓</span><div><h4>B.Sc. Computer Science</h4><p>State University · 2020</p></div></div>
+        <div class="ach"><span class="ico">🏆</span><div><h4>Hackathon Winner</h4><p>CodeQuest 2022 · Best UX</p></div></div>
+        <div class="ach"><span class="ico">📜</span><div><h4>AWS Certified Developer</h4><p>Associate · 2023</p></div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="panel contact reveal">
+      <div class="eyebrow" style="justify-content:center">▣ START A NEW GAME</div>
+      <p class="tagline" style="margin:0 auto">Got a quest for me? Let's team up.</p>
+      <!-- EDIT: your real links -->
+      <div class="links">
+        <a href="mailto:you@example.com">EMAIL</a>
+        <a href="https://github.com/yourname" target="_blank" rel="noopener">GITHUB</a>
+        <a href="https://linkedin.com/in/yourname" target="_blank" rel="noopener">LINKEDIN</a>
+        <a href="/resume.pdf" target="_blank" rel="noopener">RESUME.PDF</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <!-- EDIT: footer -->
+  GAME OVER? NEVER. · Built with <span class="heart">♥</span> &amp; pixels · © <span id="yr"></span> JORDAN PARK
+</footer>
+
+<div class="vignette"></div>
+<div class="crt"></div>
+
+<script>
+"use strict";
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- footer year ---------- */
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+/* ============================================================
+   PIXEL AVATAR  —  edit like a coloring grid (16x16).
+   key:  . transparent   h hood   H hood-lite   s skin
+         e eyes(glow)     b beard  r robe        R robe-lite   g gem
+   ============================================================ */
+const SPRITE = [
+  "................",
+  "......hhhh......",
+  ".....hHHHHh.....",
+  "....hHHHHHHh....",
+  "....hHHHHHHh....",
+  "....hssssssh....",
+  "....hseeeeszh...",
+  "....hseeeeszh...",
+  "....hssssssh....",
+  "....hbbbbbbh....",
+  "...rRRRRRRRRr...",
+  "...rRRRRRRRRr...",
+  "...rRRRRRRRRr...",
+  "...rRRgRRgRRr...",
+  "...rRRRRRRRRr...",
+  "...rr......rr..."
+];
+const PAL = {
+  h:'#5a189a', H:'#7b2cbf', s:'#ffd6a5', e:'#4cc9f0',
+  b:'#e0aaff', r:'#3c096c', R:'#7b2cbf', g:'#4cc9f0', z:'#3c096c'
+};
+(function drawAvatar(){
+  const c = document.getElementById('avatar').getContext('2d');
+  SPRITE.forEach((row,y)=>{
+    [...row].forEach((ch,x)=>{
+      if(PAL[ch]){ c.fillStyle = PAL[ch]; c.fillRect(x,y,1,1); }
+    });
+  });
+})();
+
+/* ---------- typewriter for class/title ---------- */
+const TITLES = [          // EDIT: rotates through these
+  "FULL-STACK DEVELOPER",
+  "PROBLEM SOLVER",
+  "PIXEL WRANGLER",
+  "TEAM PLAYER"
+];
+(function typer(){
+  const el = document.getElementById('class');
+  if(reduced){ el.textContent = TITLES[0]; return; }
+  let t=0,i=0,del=false;
+  function tick(){
+    const word = TITLES[t];
+    i += del ? -1 : 1;
+    el.innerHTML = word.slice(0,i) + '<span class="cursor">█</span>';
+    let wait = del ? 45 : 90;
+    if(!del && i===word.length){ wait=1400; del=true; }
+    else if(del && i===0){ del=false; t=(t+1)%TITLES.length; wait=300; }
+    setTimeout(tick, wait);
+  }
+  tick();
+})();
+
+/* ---------- scroll reveal + bar fills ---------- */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    e.target.classList.add('in-view');
+    e.target.querySelectorAll('.bar i').forEach(b=>{
+      b.style.width = (b.parentElement.dataset.fill||0)+'%';
+    });
+    io.unobserve(e.target);
+  });
+},{threshold:.18});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// flip the xp bar to filled when it scrolls into view
+new IntersectionObserver((es,o)=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in-view'); o.unobserve(e.target); } });
+},{threshold:.3}).observe(document.querySelector('.xp'));
+
+/* ---------- drifting pixel starfield ---------- */
+(function starfield(){
+  const cv = document.getElementById('stars');
+  const ctx = cv.getContext('2d');
+  let w,h,stars;
+  function init(){
+    w = cv.width = innerWidth; h = cv.height = innerHeight;
+    const n = Math.min(150, Math.floor(w*h/9000));
+    stars = Array.from({length:n},()=>({
+      x:Math.random()*w, y:Math.random()*h,
+      z:Math.random()*2+1,                 // depth → size & speed
+      c:Math.random()<.5?'#c77dff':(Math.random()<.5?'#4cc9f0':'#9d4edd')
+    }));
+  }
+  function frame(){
+    ctx.clearRect(0,0,w,h);
+    for(const s of stars){
+      s.y += s.z*0.18;
+      if(s.y>h){ s.y=0; s.x=Math.random()*w; }
+      ctx.fillStyle = s.c;
+      ctx.globalAlpha = .35 + s.z*0.22;
+      const sz = Math.ceil(s.z);
+      ctx.fillRect(s.x|0, s.y|0, sz, sz);
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+  function drawStatic(){
+    ctx.clearRect(0,0,w,h);
+    for(const s of stars){ ctx.fillStyle=s.c; ctx.globalAlpha=.5; ctx.fillRect(s.x|0,s.y|0,Math.ceil(s.z),Math.ceil(s.z)); }
+    ctx.globalAlpha=1;
+  }
+  addEventListener('resize', ()=>{ init(); if(reduced) drawStatic(); });
+  init();
+  reduced ? drawStatic() : frame();
+})();
+
+/* ---------- boot sequence ---------- */
+(function boot(){
+  const box = document.getElementById('boot');
+  const out = box.querySelector('.blines');
+  const start = box.querySelector('.start');
+  const lines = [
+    "PIXEL-OS v5.0 ............ OK",
+    "MOUNTING /player/jordan .. OK",
+    "LOADING STATS ............ OK",
+    "QUEST LOG SYNCED ......... OK",
+    ""
+  ];
+  function dismiss(){
+    box.classList.add('done');
+    setTimeout(()=>box.remove(), 600);
+  }
+  if(reduced){ dismiss(); return; }
+  let li=0,ci=0;
+  (function type(){
+    if(li>=lines.length){ start.style.opacity=1; setTimeout(dismiss,900); return; }
+    const line = lines[li];
+    out.textContent += line[ci]||'';
+    ci++;
+    if(ci>line.length){ out.textContent+='\n'; li++; ci=0; setTimeout(type,140); }
+    else setTimeout(type, 18);
+  })();
+  box.addEventListener('click', dismiss);  // skip on click
+})();
+</script>
 </body>
 </html>
