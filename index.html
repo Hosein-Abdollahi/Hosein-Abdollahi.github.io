@@ -657,7 +657,12 @@ const io2 = new IntersectionObserver((entries,o)=>{
   function frame(){ t++; drawSky(); drawBuildings(); drawRain(); requestAnimationFrame(frame); }
   function staticFrame(){ drawSky(); drawBuildings(); }
   addEventListener('scroll', ()=>{ scrollY = window.pageYOffset || 0; }, {passive:true});
-  let rz; addEventListener('resize', ()=>{ clearTimeout(rz); rz = setTimeout(()=>{ init(); if(reduced) staticFrame(); }, 200); });
+  let rz, lastW = innerWidth;
+  addEventListener('resize', ()=>{
+    if(Math.abs(innerWidth - lastW) < 2) return;
+    lastW = innerWidth;
+    clearTimeout(rz); rz = setTimeout(()=>{ init(); if(reduced) staticFrame(); }, 200);
+  });
   init();
   reduced ? staticFrame() : frame();
 })();
