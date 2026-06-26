@@ -129,7 +129,7 @@
   .gpa-lbl{font-family:var(--display); font-size:10px; color:var(--text)}
   .gpa{flex:1; min-width:180px; height:22px; background:var(--bg-void); border:3px solid var(--line); position:relative; overflow:hidden}
   .gpa i{position:absolute; inset:0; width:0; background:repeating-linear-gradient(90deg,var(--violet) 0 8px,var(--violet-bright) 8px 16px); transition:width 1.4s steps(20)}
-  .gpa.in-view i{width:92.75%}
+  .gpa.in-view i{width:96.25%}
   .gpa span{position:absolute; right:8px; top:50%; transform:translateY(-50%); font-size:18px; color:var(--text); text-shadow:1px 1px 0 #000}
 
   .about p{font-size:22px; color:var(--text); max-width:64ch}
@@ -331,7 +331,7 @@
         </div>
         <div class="gpa-row">
           <span class="gpa-lbl">GPA</span>
-          <div class="gpa"><i></i><span>3.71 / 4.00</span></div>
+          <div class="gpa"><i></i><span>3.85 / 4.00</span></div>
         </div>
       </div>
     </div>
@@ -402,7 +402,7 @@
         <div class="node done">
           <div class="dot">↑</div>
           <h4>Top of the Class</h4>
-          <div class="meta">Ranked #1 · GPA 3.71 / 4.00</div>
+          <div class="meta">Ranked #1 · GPA 3.85 / 4.00</div>
         </div>
 
         <div class="node here">
@@ -546,6 +546,7 @@ const io2 = new IntersectionObserver((entries,o)=>{
 (function city(){
   const cv = document.getElementById('stars');
   const ctx = cv.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   let w, hh, layers, stars, rain, moon, scrollY = 0, t = 0;
   function rnd(a,b){ return a + Math.random()*(b-a); }
   function buildLayer(opt){
@@ -566,8 +567,8 @@ const io2 = new IntersectionObserver((entries,o)=>{
     return arr;
   }
   function renderLayer(L){
-    const cnv = document.createElement('canvas'); cnv.width = w; cnv.height = hh + 260;
-    const x = cnv.getContext('2d'); const samples = [];
+    const cnv = document.createElement('canvas'); cnv.width = Math.round(w*dpr); cnv.height = Math.round((hh + 260)*dpr);
+    const x = cnv.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0); const samples = [];
     for(const b of L.b){
       const by = hh - b.bh;
       x.fillStyle = L.color; x.fillRect(b.x|0, by|0, Math.ceil(b.bw), b.bh + 260);
@@ -599,7 +600,10 @@ const io2 = new IntersectionObserver((entries,o)=>{
     L.canvas = cnv; L.samples = samples;
   }
   function init(){
-    w = cv.width = innerWidth; hh = cv.height = innerHeight;
+    w = innerWidth; hh = innerHeight;
+    cv.width = Math.round(w*dpr); cv.height = Math.round(hh*dpr);
+    cv.style.width = w + 'px'; cv.style.height = hh + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
     stars = [];
     const n = Math.min(220, Math.floor(w*hh/6500));
     for(let i=0;i<n;i++){
@@ -641,7 +645,7 @@ const io2 = new IntersectionObserver((entries,o)=>{
   function drawBuildings(){
     for(const L of layers){
       const off = Math.min(scrollY * L.speed, 160);
-      ctx.drawImage(L.canvas, 0, off);
+      ctx.drawImage(L.canvas, 0, off, w, hh + 260);
       ctx.fillStyle = '#ffffff';
       for(let i=0;i<L.samples.length;i++){
         if(((t + i*23) % 240) < 5){ const s = L.samples[i]; ctx.fillRect(s.x, (s.y + off)|0, s.s, s.s); }
@@ -828,7 +832,5 @@ const SFX = (function(){
   tick(); setInterval(tick, 15000);
 })();
 </script>
-</body>
-</html>
 </body>
 </html>
