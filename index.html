@@ -31,14 +31,14 @@
     background:var(--bg-void); color:var(--text);
     font-family:var(--body); font-size:22px; line-height:1.35;
     overflow-x:hidden; position:relative; min-height:100vh;
+    padding-bottom:52px;
   }
   #stars{position:fixed; inset:0; z-index:-2; display:block}
   .wash{
     position:fixed; inset:0; z-index:-1; pointer-events:none;
     background:
-      radial-gradient(60% 50% at 50% -10%, rgba(157,78,221,.35), transparent 70%),
-      radial-gradient(70% 60% at 100% 110%, rgba(67,97,238,.28), transparent 70%),
-      radial-gradient(50% 40% at 0% 80%, rgba(199,125,255,.18), transparent 70%);
+      radial-gradient(60% 50% at 50% -10%, rgba(157,78,221,.18), transparent 70%),
+      radial-gradient(70% 50% at 100% 110%, rgba(67,97,238,.16), transparent 70%);
   }
   .crt{
     position:fixed; inset:0; z-index:9998; pointer-events:none;
@@ -81,8 +81,20 @@
     box-shadow:0 0 0 3px var(--bg-void), 0 0 0 6px var(--line), 10px 10px 0 rgba(0,0,0,.5), 0 0 28px rgba(157,78,221,.25);
     padding:28px;
   }
-  .eyebrow{font-family:var(--display); font-size:11px; color:var(--cyan); letter-spacing:1px; margin-bottom:18px; display:flex; align-items:center; gap:10px}
-  .eyebrow::after{content:''; flex:1; height:0; border-top:3px dashed var(--line)}
+  .eyebrow{
+    font-family:var(--display); font-size:10px; color:#0a0118; letter-spacing:1px;
+    display:flex; align-items:center; gap:10px; margin:0;
+    background:linear-gradient(90deg,var(--violet-bright),var(--blue));
+    border:3px solid var(--violet); border-bottom:none;
+    box-shadow:0 0 0 3px var(--bg-void);
+    padding:10px 14px; position:relative; z-index:2; width:100%;
+  }
+  .eyebrow::before{
+    content:''; flex:0 0 auto; width:11px; height:11px; background:#ff5f57;
+    box-shadow:18px 0 0 #febc2e, 36px 0 0 #28c840; margin-right:42px;
+    image-rendering:pixelated;
+  }
+  .eyebrow::after{content:none}
 
   .hero{display:grid; grid-template-columns:auto 1fr; gap:34px; align-items:center}
   .portrait{
@@ -117,7 +129,7 @@
   .gpa-lbl{font-family:var(--display); font-size:10px; color:var(--text)}
   .gpa{flex:1; min-width:180px; height:22px; background:var(--bg-void); border:3px solid var(--line); position:relative; overflow:hidden}
   .gpa i{position:absolute; inset:0; width:0; background:repeating-linear-gradient(90deg,var(--violet) 0 8px,var(--violet-bright) 8px 16px); transition:width 1.4s steps(20)}
-  .gpa.in-view i{width:92.5%}
+  .gpa.in-view i{width:92.75%}
   .gpa span{position:absolute; right:8px; top:50%; transform:translateY(-50%); font-size:18px; color:var(--text); text-shadow:1px 1px 0 #000}
 
   .about p{font-size:22px; color:var(--text); max-width:64ch}
@@ -241,22 +253,31 @@
   .proj.locked .proj-desc{color:var(--dim)}
   .proj-link.dim{color:var(--dim)}
 
-  .hitcounter{display:inline-flex; align-items:center; gap:10px; margin-bottom:18px}
+  #taskbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:600;
+    display:flex; align-items:center; gap:10px; padding:7px 10px;
+    background:rgba(8,1,15,.93); border-top:3px solid var(--violet);
+    backdrop-filter:blur(4px); box-shadow:0 -4px 18px rgba(157,78,221,.25);
+    font-family:var(--display); font-size:9px;
+  }
+  .tb-start{color:var(--cyan); border:2px solid var(--line); background:var(--bg-void); padding:7px 9px; letter-spacing:.5px}
+  .tb-spacer{flex:1}
+  #tb-clock{color:var(--cyan); border:2px solid var(--line); background:var(--bg-void); padding:7px 9px; min-width:60px; text-align:center; text-shadow:0 0 6px var(--cyan)}
+  .hitcounter{display:inline-flex; align-items:center; gap:8px}
   .hc-label{font-family:var(--display); font-size:9px; color:var(--dim); letter-spacing:1px}
   .hc-digits{
-    font-family:var(--display); font-size:14px; color:var(--cyan);
-    background:var(--bg-void); border:2px solid var(--violet); padding:8px 10px;
-    letter-spacing:4px; text-shadow:0 0 8px var(--cyan); box-shadow:inset 0 0 12px rgba(76,201,240,.2);
+    font-family:var(--display); font-size:11px; color:var(--cyan);
+    background:var(--bg-void); border:2px solid var(--violet); padding:7px 8px;
+    letter-spacing:3px; text-shadow:0 0 8px var(--cyan); box-shadow:inset 0 0 12px rgba(76,201,240,.2);
   }
 
   #sound-toggle{
-    position:fixed; left:14px; bottom:14px; z-index:600; cursor:pointer;
-    font-family:var(--display); font-size:9px; color:var(--text);
-    background:var(--panel-2); border:3px solid var(--violet);
-    box-shadow:3px 3px 0 rgba(0,0,0,.6); padding:10px 12px; letter-spacing:.5px;
+    cursor:pointer; font-family:var(--display); font-size:9px; color:var(--text);
+    background:var(--panel-2); border:2px solid var(--violet);
+    padding:7px 9px; letter-spacing:.5px;
     transition:transform .1s steps(2), background .1s steps(2), color .1s steps(2);
   }
-  #sound-toggle:hover, #sound-toggle:focus-visible{transform:translate(-2px,-2px); background:var(--violet); color:#0a0118; outline:none}
+  #sound-toggle:hover, #sound-toggle:focus-visible{transform:translate(-1px,-1px); background:var(--violet); color:#0a0118; outline:none}
   #sound-toggle.on{color:var(--cyan); border-color:var(--cyan)}
   #sound-toggle.on:hover{color:#0a0118; background:var(--cyan)}
 
@@ -266,8 +287,12 @@
     .proj{flex:0 0 86%; max-width:none}
     .cbtn{order:1; font-size:12px; padding:14px 26px}
     .cbtn.next{order:2}
-    .hc-digits{font-size:12px; letter-spacing:3px}
-    #sound-toggle{font-size:8px; padding:8px 10px}
+    #taskbar{gap:7px; padding:6px 8px; font-size:8px}
+    .tb-start{display:none}
+    .hc-label{display:none}
+    .hc-digits{font-size:10px; letter-spacing:2px; padding:6px}
+    #sound-toggle{font-size:8px; padding:6px}
+    #tb-clock{font-size:8px; min-width:48px; padding:6px}
   }
 </style>
 </head>
@@ -306,23 +331,23 @@
         </div>
         <div class="gpa-row">
           <span class="gpa-lbl">GPA</span>
-          <div class="gpa"><i></i><span>3.70 / 4.00</span></div>
+          <div class="gpa"><i></i><span>3.71 / 4.00</span></div>
         </div>
       </div>
     </div>
   </section>
 
   <section id="about">
-    <div class="eyebrow">▣ ABOUT</div>
+    <div class="eyebrow">about.exe</div>
     <div class="panel about reveal">
-      <p>I am an undergraduate researcher in Computer Science at <span class="hl">Shahid Chamran University of Ahvaz</span>, ranked first in my branch, working at the intersection of machine learning and large language models. My research investigates the <span class="hl">reasoning and reliability of LLMs and agentic AI systems</span> — how these models fail, why they fail, and how to design methods that remain sound where conventional approaches do not.</p>
+      <p>I am an undergraduate researcher in Computer Science at <span class="hl">Shahid Chamran University of Ahvaz</span>, ranked first in my Computer Science program, working at the intersection of machine learning and large language models. My research investigates the <span class="hl">reasoning and reliability of LLMs and agentic AI systems</span> — how these models fail, why they fail, and how to design methods that remain sound where conventional approaches do not.</p>
       <p>I am currently developing <span class="hl">three papers</span> in this area, including one on applying machine learning to industrial control systems (ICS). A single thread runs through this work: the edge cases and failure modes that standard algorithms quietly ignore. I am less interested in models that perform well on benchmarks than in understanding the conditions under which they break — and in building systems that hold up under exactly those conditions.</p>
       <p>This research is grounded in hands-on engineering. I work across the ML stack (PyTorch, TensorFlow, scikit-learn, XGBoost) and the modern LLM toolkit (RAG, agentic frameworks, Ollama), and I build the end-to-end systems that carry models from experiment to deployment (Django, FastAPI, SQL/NoSQL). I have also served as a <span class="hl">teaching assistant</span> in my faculty.</p>
     </div>
   </section>
 
   <section id="skills">
-    <div class="eyebrow">▣ SKILLS</div>
+    <div class="eyebrow">skills.sys</div>
     <div class="panel reveal">
       <div class="skill-grid">
         <div class="skill-cat">
@@ -354,7 +379,7 @@
   </section>
 
   <section id="roadmap">
-    <div class="eyebrow">▣ ROADMAP</div>
+    <div class="eyebrow">roadmap.log</div>
     <div class="panel reveal">
       <div class="road">
         <div class="track"></div>
@@ -376,8 +401,8 @@
 
         <div class="node done">
           <div class="dot">↑</div>
-          <h4>Top of the Branch</h4>
-          <div class="meta">Ranked #1 · GPA 3.70 / 4.00</div>
+          <h4>Top of the Class</h4>
+          <div class="meta">Ranked #1 · GPA 3.71 / 4.00</div>
         </div>
 
         <div class="node here">
@@ -398,7 +423,7 @@
   </section>
 
   <section id="projects">
-    <div class="eyebrow">▣ PROJECTS — STAGE SELECT</div>
+    <div class="eyebrow">projects.dir</div>
     <div class="carousel">
       <button class="cbtn prev" aria-label="Previous project">◄</button>
       <div class="ctrack" id="ptrack">
@@ -434,8 +459,8 @@
   </section>
 
   <section id="contact">
+    <div class="eyebrow">contact.run</div>
     <div class="panel contact reveal">
-      <div class="eyebrow" style="justify-content:center">▣ START A NEW GAME</div>
       <p class="tagline" style="margin:0 auto">Want to collaborate or talk research? Reach out.</p>
       <div class="links">
         <a href="mailto:H.abdollahi2005@gmail.com">EMAIL</a>
@@ -448,14 +473,19 @@
 </main>
 
 <footer>
-  <div class="hitcounter" aria-label="Visitor counter">
-    <span class="hc-label">VISITORS</span>
-    <span class="hc-digits" id="hc-digits">0000000</span>
-  </div>
   GAME OVER? NEVER. · Built with <span class="heart">♥</span> &amp; pixels · © <span id="yr"></span> Hosein Abdollahi
 </footer>
 
-<button id="sound-toggle" aria-pressed="false" title="Toggle 8-bit sound">♪ SOUND: OFF</button>
+<div id="taskbar">
+  <span class="tb-start">▶ HOSEIN.OS</span>
+  <span class="tb-spacer"></span>
+  <button id="sound-toggle" aria-pressed="false" title="Toggle 8-bit sound">♪ OFF</button>
+  <span class="hitcounter" aria-label="Visitor counter">
+    <span class="hc-label">HITS</span>
+    <span class="hc-digits" id="hc-digits">0000000</span>
+  </span>
+  <span id="tb-clock">--:--</span>
+</div>
 
 <div class="vignette"></div>
 <div class="crt"></div>
@@ -513,43 +543,130 @@ const io2 = new IntersectionObserver((entries,o)=>{
 },{threshold:.3});
 [document.querySelector('.gpa'), document.querySelector('.road')].forEach(el=>{ if(el) io2.observe(el); });
 
-(function starfield(){
+(function city(){
   const cv = document.getElementById('stars');
   const ctx = cv.getContext('2d');
-  let w,h,stars;
-  function init(){
-    w = cv.width = innerWidth; h = cv.height = innerHeight;
-    const n = Math.min(150, Math.floor(w*h/9000));
-    stars = Array.from({length:n},()=>({
-      x:Math.random()*w, y:Math.random()*h, z:Math.random()*2+1,
-      c:Math.random()<.5?'#c77dff':(Math.random()<.5?'#4cc9f0':'#9d4edd')
-    }));
-  }
-  function frame(){
-    ctx.clearRect(0,0,w,h);
-    for(const s of stars){
-      s.y += s.z*0.18;
-      if(s.y>h){ s.y=0; s.x=Math.random()*w; }
-      ctx.fillStyle=s.c; ctx.globalAlpha=.35+s.z*0.22;
-      const sz=Math.ceil(s.z); ctx.fillRect(s.x|0,s.y|0,sz,sz);
+  let w, hh, layers, stars, rain, moon, scrollY = 0, t = 0;
+  function rnd(a,b){ return a + Math.random()*(b-a); }
+  function buildLayer(opt){
+    const arr = []; let x = -rnd(0,40);
+    while(x < w + 260){
+      const tall = Math.random() < 0.18;
+      const bw = rnd(opt.minW,opt.maxW);
+      const bh = tall ? rnd(opt.maxH*0.9, opt.maxH*1.35) : rnd(opt.minH,opt.maxH);
+      const c = Math.max(1, Math.floor((bw-8)/opt.cell)), r = Math.max(1, Math.floor((bh-8)/opt.cell));
+      const lit = new Set();
+      for(let i=0;i<c*r;i++){ if(Math.random()<opt.litP) lit.add(i); }
+      arr.push({x,bw,bh,c,r,lit,cell:opt.cell,
+        roof: Math.random()<0.4, antenna: Math.random()<0.38,
+        sw: rnd(0.3,0.6), sh: rnd(14,46), soff: Math.random(), aoff: rnd(0.25,0.75), ah: rnd(12,36),
+        atip: Math.random()<0.5 ? '#ff5f6d' : '#7fe0ff' });
+      x += bw + rnd(opt.gapMin,opt.gapMax);
     }
-    ctx.globalAlpha=1; requestAnimationFrame(frame);
+    return arr;
   }
-  function drawStatic(){
-    ctx.clearRect(0,0,w,h);
-    for(const s of stars){ ctx.fillStyle=s.c; ctx.globalAlpha=.5; ctx.fillRect(s.x|0,s.y|0,Math.ceil(s.z),Math.ceil(s.z)); }
-    ctx.globalAlpha=1;
+  function renderLayer(L){
+    const cnv = document.createElement('canvas'); cnv.width = w; cnv.height = hh + 260;
+    const x = cnv.getContext('2d'); const samples = [];
+    for(const b of L.b){
+      const by = hh - b.bh;
+      x.fillStyle = L.color; x.fillRect(b.x|0, by|0, Math.ceil(b.bw), b.bh + 260);
+      if(b.roof){
+        const sw = b.bw*b.sw, sx = b.x + b.soff*(b.bw - sw), sh = b.sh;
+        x.fillStyle = L.color; x.fillRect(sx|0, (by-sh)|0, Math.ceil(sw), sh);
+        x.fillStyle = L.edge; x.fillRect(sx|0, (by-sh)|0, Math.ceil(sw), 3);
+      }
+      x.fillStyle = L.edge; x.fillRect(b.x|0, by|0, Math.ceil(b.bw), 3);
+      if(b.antenna){
+        const ax = b.x + b.bw*b.aoff;
+        x.fillStyle = L.edge; x.fillRect(ax|0, (by-b.ah)|0, 2, b.ah);
+        x.fillStyle = b.atip; x.fillRect((ax-1)|0, (by-b.ah-3)|0, 4, 4);
+      }
+      const darkCols = new Set();
+      for(let c=0;c<b.c;c++){ if(Math.random()<0.16) darkCols.add(c); }
+      x.fillStyle = L.win; let idx = 0;
+      for(let r=0;r<b.r;r++){ for(let c=0;c<b.c;c++){
+        if(!darkCols.has(c) && b.lit.has(idx)){
+          const wx = b.x+5+c*b.cell, wy = by+6+r*b.cell, ws = b.cell-3;
+          x.globalAlpha = Math.random()<0.25 ? 0.45 : 1;
+          x.fillRect(wx|0, wy|0, ws, ws);
+          x.globalAlpha = 1;
+          if(samples.length<40 && Math.random()<0.09) samples.push({x:wx|0,y:wy|0,s:ws});
+        }
+        idx++;
+      } }
+    }
+    L.canvas = cnv; L.samples = samples;
   }
-  addEventListener('resize', ()=>{ init(); if(reduced) drawStatic(); });
+  function init(){
+    w = cv.width = innerWidth; hh = cv.height = innerHeight;
+    stars = [];
+    const n = Math.min(220, Math.floor(w*hh/6500));
+    for(let i=0;i<n;i++){
+      stars.push({ x:Math.random()*w, y:Math.random()*hh*0.82, p:Math.random()*6,
+        sz: Math.random()<0.12 ? 3 : (Math.random()<0.4 ? 2 : 1),
+        c: Math.random()<0.5 ? '199,125,255' : (Math.random()<0.5 ? '120,200,255' : '236,228,255') });
+    }
+    moon = { x: w*0.78, y: hh*0.2, r: Math.max(48, Math.min(w,hh)*0.13) };
+    layers = [
+      {color:'#1c1150', edge:'#7b5fe0', win:'#9a7bf0', speed:0.04, b:buildLayer({minW:34,maxW:96,  minH:hh*0.12,maxH:hh*0.32, cell:9,  litP:0.24, gapMin:6,gapMax:34})},
+      {color:'#160c40', edge:'#c77dff', win:'#d7a8ff', speed:0.10, b:buildLayer({minW:46,maxW:128, minH:hh*0.18,maxH:hh*0.46, cell:11, litP:0.30, gapMin:4,gapMax:26})},
+      {color:'#100830', edge:'#4cc9f0', win:'#7fe0ff', speed:0.18, b:buildLayer({minW:62,maxW:170, minH:hh*0.24,maxH:hh*0.62, cell:13, litP:0.34, gapMin:2,gapMax:18})}
+    ];
+    layers.forEach(renderLayer);
+    const rn = reduced ? 0 : Math.min(300, Math.floor(w*hh/4200));
+    rain = Array.from({length: rn},()=>({x:Math.random()*w, y:Math.random()*hh, l:rnd(10,22), s:rnd(9,16)}));
+  }
+  function drawSky(){
+    const g = ctx.createLinearGradient(0,0,0,hh);
+    g.addColorStop(0,'#08010f'); g.addColorStop(0.5,'#160a36'); g.addColorStop(1,'#0c0322');
+    ctx.fillStyle = g; ctx.fillRect(0,0,w,hh);
+    for(const s of stars){
+      const a = 0.25 + 0.6*Math.abs(Math.sin(t*0.02 + s.p));
+      ctx.fillStyle = 'rgba(' + s.c + ',' + a.toFixed(2) + ')';
+      ctx.fillRect(s.x|0, s.y|0, s.sz, s.sz);
+    }
+    const mg = ctx.createRadialGradient(moon.x,moon.y,0,moon.x,moon.y,moon.r*2.8);
+    mg.addColorStop(0,'rgba(199,125,255,0.4)'); mg.addColorStop(0.5,'rgba(157,78,221,0.14)'); mg.addColorStop(1,'rgba(157,78,221,0)');
+    ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(moon.x,moon.y,moon.r*2.8,0,7); ctx.fill();
+    const sx = moon.x + moon.r*0.55, sy = moon.y - moon.r*0.12, sr = moon.r*0.94;
+    function lit(px,py){ const dx=px-moon.x, dy=py-moon.y, ex=px-sx, ey=py-sy; return (dx*dx+dy*dy<=moon.r*moon.r) && (ex*ex+ey*ey > sr*sr); }
+    ctx.fillStyle = '#efe6ff';
+    for(let yy=-moon.r; yy<moon.r; yy+=6){ for(let xx=-moon.r; xx<moon.r; xx+=6){ if(lit(moon.x+xx, moon.y+yy)) ctx.fillRect((moon.x+xx)|0,(moon.y+yy)|0,6,6); } }
+    ctx.fillStyle = 'rgba(157,78,221,0.4)';
+    const cr = [[-0.35,-0.15,0.2],[-0.1,0.32,0.14]];
+    for(const c of cr){ const r2 = moon.r*c[2], cxp = moon.x+c[0]*moon.r, cyp = moon.y+c[1]*moon.r;
+      for(let yy=-r2; yy<r2; yy+=6){ for(let xx=-r2; xx<r2; xx+=6){ if(xx*xx+yy*yy<=r2*r2 && lit(cxp+xx,cyp+yy)) ctx.fillRect((cxp+xx)|0,(cyp+yy)|0,6,6); } } }
+  }
+  function drawBuildings(){
+    for(const L of layers){
+      const off = Math.min(scrollY * L.speed, 160);
+      ctx.drawImage(L.canvas, 0, off);
+      ctx.fillStyle = '#ffffff';
+      for(let i=0;i<L.samples.length;i++){
+        if(((t + i*23) % 240) < 5){ const s = L.samples[i]; ctx.fillRect(s.x, (s.y + off)|0, s.s, s.s); }
+      }
+    }
+  }
+  function drawRain(){
+    if(!rain.length) return;
+    ctx.strokeStyle = 'rgba(140,170,255,0.28)'; ctx.lineWidth = 1.2; ctx.beginPath();
+    for(const d of rain){ d.y += d.s; d.x -= d.s*0.2; if(d.y > hh){ d.y = -14; d.x = Math.random()*w; } if(d.x < 0) d.x = w; ctx.moveTo(d.x,d.y); ctx.lineTo(d.x - d.l*0.2, d.y + d.l); }
+    ctx.stroke();
+  }
+  function frame(){ t++; drawSky(); drawBuildings(); drawRain(); requestAnimationFrame(frame); }
+  function staticFrame(){ drawSky(); drawBuildings(); }
+  addEventListener('scroll', ()=>{ scrollY = window.pageYOffset || 0; }, {passive:true});
+  let rz; addEventListener('resize', ()=>{ clearTimeout(rz); rz = setTimeout(()=>{ init(); if(reduced) staticFrame(); }, 200); });
   init();
-  reduced ? drawStatic() : frame();
+  reduced ? staticFrame() : frame();
 })();
 
 (function boot(){
   const box = document.getElementById('boot');
   const out = box.querySelector('.blines');
   const start = box.querySelector('.start');
-  const lines = ["PIXEL-OS v5.0 ............ OK","MOUNTING /player/hosein .. OK","LOADING STATS ............ OK","ROADMAP SYNCED ........... OK",""];
+  const lines = ["HOSEIN.OS v2.0 ........... OK","CONNECTING TO GRID ....... OK","RENDERING SKYLINE ........ OK","LOADING MODULES .......... OK",""];
   function dismiss(){ box.classList.add('done'); setTimeout(()=>box.remove(),600); }
   if(reduced){ dismiss(); return; }
   let li=0,ci=0;
@@ -564,7 +681,7 @@ const io2 = new IntersectionObserver((entries,o)=>{
 })();
 
 const SFX = (function(){
-  let ctx = null, enabled = false;
+  let ctx = null, enabled = false, rainNodes = null;
   function ensure(){
     if(!ctx){
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -584,8 +701,33 @@ const SFX = (function(){
     o.connect(g); g.connect(c.destination);
     o.start(t); o.stop(t + dur);
   }
+  function startRain(){
+    const c = ensure(); if(!c || rainNodes) return;
+    const size = Math.floor(c.sampleRate * 3);
+    const buf = c.createBuffer(1, size, c.sampleRate);
+    const data = buf.getChannelData(0);
+    for(let i=0;i<size;i++){ data[i] = (Math.random()*2-1) * 0.5; }
+    const src = c.createBufferSource(); src.buffer = buf; src.loop = true;
+    const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 420;
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600;
+    const g = c.createGain(); g.gain.setValueAtTime(0.0001, c.currentTime);
+    src.connect(hp); hp.connect(lp); lp.connect(g); g.connect(c.destination);
+    src.start();
+    g.gain.linearRampToValueAtTime(0.075, c.currentTime + 1.4);
+    rainNodes = { src, g };
+  }
+  function stopRain(){
+    if(!rainNodes || !ctx) return;
+    const r = rainNodes; rainNodes = null;
+    try{
+      r.g.gain.cancelScheduledValues(ctx.currentTime);
+      r.g.gain.setValueAtTime(r.g.gain.value, ctx.currentTime);
+      r.g.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+      setTimeout(()=>{ try{ r.src.stop(); }catch(e){} }, 600);
+    }catch(e){}
+  }
   return {
-    setEnabled(v){ enabled = v; if(v) ensure(); },
+    setEnabled(v){ enabled = v; if(v){ ensure(); startRain(); } else { stopRain(); } },
     isEnabled(){ return enabled; },
     hover(){ tone(880, 0.05, 'square', 0.04); },
     click(){ tone(523, 0.06, 'square', 0.06); tone(784, 0.08, 'square', 0.05, 0.05); },
@@ -598,7 +740,7 @@ const SFX = (function(){
   function setState(on){
     SFX.setEnabled(on);
     btn.classList.toggle('on', on);
-    btn.textContent = on ? '♪ SOUND: ON' : '♪ SOUND: OFF';
+    btn.textContent = on ? '♪ ON' : '♪ OFF';
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
   btn.addEventListener('click', ()=>{
@@ -670,6 +812,15 @@ const SFX = (function(){
     .then(r=>{ if(!r.ok) throw new Error('counter'); return r.json(); })
     .then(d=>{ if(d && typeof d.value === 'number') render(d.value); else localFallback(); })
     .catch(localFallback);
+})();
+(function clock(){
+  const el = document.getElementById('tb-clock');
+  if(!el) return;
+  function tick(){
+    const d = new Date();
+    el.textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  }
+  tick(); setInterval(tick, 15000);
 })();
 </script>
 </body>
