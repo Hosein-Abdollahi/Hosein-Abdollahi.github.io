@@ -253,6 +253,23 @@
   .proj.locked .proj-desc{color:var(--dim)}
   .proj-link.dim{color:var(--dim)}
 
+  .proj.group:hover{
+    transform:translate(-4px,-4px);
+    box-shadow:0 0 0 3px var(--bg-void), 0 0 0 6px var(--violet-bright), 12px 12px 0 rgba(0,0,0,.55), 0 0 30px var(--violet);
+  }
+  .proj-kind{
+    font-family:var(--display); font-size:8px; letter-spacing:.5px; margin-left:auto;
+    padding:5px 7px; border:2px solid #0a0118; background:#0a0118; color:var(--cyan); flex:0 0 auto;
+  }
+  .proj-kind.practical{color:var(--violet-bright)}
+  .proj-links{display:flex; flex-wrap:wrap; gap:8px; padding:12px 16px; border-top:2px solid var(--line)}
+  .proj-links a{
+    font-family:var(--display); font-size:9px; color:var(--violet-bright); text-decoration:none;
+    border:2px solid var(--line); padding:6px 8px; letter-spacing:.5px;
+    transition:color .1s steps(2), border-color .1s steps(2), background .1s steps(2);
+  }
+  .proj-links a:hover, .proj-links a:focus-visible{color:#0a0118; background:var(--violet-bright); border-color:var(--violet-bright); outline:none}
+
   #taskbar{
     position:fixed; left:0; right:0; bottom:0; z-index:600;
     display:flex; align-items:center; gap:10px; padding:7px 10px;
@@ -374,6 +391,13 @@
             <span class="tag">MySQL</span><span class="tag">MongoDB</span>
           </div>
         </div>
+        <div class="skill-cat">
+          <h3>⚙ TOOLS</h3>
+          <div class="tags">
+            <span class="tag">Linux</span><span class="tag">Jupyter</span>
+            <span class="tag">Git</span><span class="tag">GitHub</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -427,23 +451,38 @@
     <div class="carousel">
       <button class="cbtn prev" aria-label="Previous project">◄</button>
       <div class="ctrack" id="ptrack">
-
-        <a class="proj" href="https://github.com/Hosein-Abdollahi/Narrative-Resonance" target="_blank" rel="noopener">
-          <div class="proj-bar"><span class="proj-emoji">🎨</span> NARRATIVE RESONANCE</div>
-          <p class="proj-desc">What color is your text? An NLP tool that reads a text's emotional content and turns it into a unique color palette — encoding an 8-dimensional emotion vector into HSL color space, with an emotion breakdown and a sentence-by-sentence emotional arc.</p>
+        <div class="proj group">
+          <div class="proj-bar"><span class="proj-emoji">🎨</span> NARRATIVE RESONANCE <span class="proj-kind practical">PRACTICAL</span></div>
+          <p class="proj-desc">An emotion engine for literary text, plus the critique tool built on top of it. The core library maps a text's emotional content into color space using a 12-emotion taxonomy, rendering narrative arcs and keyword-level sentiment. The companion Claude Skill turns that engine into a developmental critic: bundled Python measures told-emotion density, pacing variance and prose metrics, while the model judges what those numbers mean — so critique is evidence-backed rather than generic.</p>
           <div class="proj-tags">
             <span class="ptag">NLP</span><span class="ptag">Python</span>
-            <span class="ptag">Sentiment Analysis</span><span class="ptag">Plotly</span>
+            <span class="ptag">Emotion Analysis</span><span class="ptag">Claude Skill</span>
           </div>
-          <span class="proj-link">VIEW REPO →</span>
-        </a>
+          <div class="proj-links">
+            <a href="https://github.com/Hosein-Abdollahi/Narrative-Resonance" target="_blank" rel="noopener">ENGINE →</a>
+            <a href="https://github.com/Hosein-Abdollahi/narrative-resonance-critic" target="_blank" rel="noopener">CRITIC →</a>
+          </div>
+        </div>
 
-        <a class="proj" href="https://github.com/Hosein-Abdollahi/narrative-resonance-critic" target="_blank" rel="noopener">
-          <div class="proj-bar"><span class="proj-emoji">✍️</span> NARRATIVE RESONANCE CRITIC</div>
-          <p class="proj-desc">A Claude Skill that gives developmental critique of fiction — chapters, scenes, or whole stories. It pairs close reading with deterministic Python measurements, so feedback on emotional arc, show-vs-tell, pacing, and prose is specific and evidence-backed rather than generic.</p>
+        <div class="proj group">
+          <div class="proj-bar"><span class="proj-emoji">🛡️</span> INJECTION DEFENSE <span class="proj-kind practical">PRACTICAL</span></div>
+          <p class="proj-desc">A provenance-based defense against indirect prompt injection. Instead of pattern-matching malicious text — which an attacker can always rephrase — it tracks where each piece of context came from and constrains what untrusted data is permitted to do. Shipped in two forms: a standalone gateway, and an MCP server that drops the same protection into any Model Context Protocol tool chain.</p>
           <div class="proj-tags">
-            <span class="ptag">Claude Skill</span><span class="ptag">Python</span>
-            <span class="ptag">NLP</span><span class="ptag">Fiction</span>
+            <span class="ptag">LLM Security</span><span class="ptag">Prompt Injection</span>
+            <span class="ptag">MCP</span><span class="ptag">Python</span>
+          </div>
+          <div class="proj-links">
+            <a href="https://github.com/Hosein-Abdollahi/provenance-gateway" target="_blank" rel="noopener">GATEWAY →</a>
+            <a href="https://github.com/Hosein-Abdollahi/mcp-injection-guard" target="_blank" rel="noopener">MCP GUARD →</a>
+          </div>
+        </div>
+
+        <a class="proj" href="https://github.com/Hosein-Abdollahi/inverse-scaling-in-code" target="_blank" rel="noopener">
+          <div class="proj-bar"><span class="proj-emoji">🔬</span> INVERSE SCALING IN CODE <span class="proj-kind">STUDY</span></div>
+          <p class="proj-desc">Does telling a code model to think harder make it worse? A replication porting inverse scaling in test-time compute (Gema et al., TMLR 2025) from natural-language reasoning to code reasoning. The result was negative — the effect did not transfer — and the repository reports it as such, harness and findings intact.</p>
+          <div class="proj-tags">
+            <span class="ptag">LLM Reasoning</span><span class="ptag">Replication</span>
+            <span class="ptag">Evaluation</span><span class="ptag">Python</span>
           </div>
           <span class="proj-link">VIEW REPO →</span>
         </a>
@@ -458,7 +497,7 @@
       </div>
       <button class="cbtn next" aria-label="Next project">►</button>
     </div>
-    <div class="cstage">STAGE <span id="cstage-cur">01</span> / <span id="cstage-total">03</span></div>
+    <div class="cstage">STAGE <span id="cstage-cur">01</span> / <span id="cstage-total">04</span></div>
   </section>
 
   <section id="contact">
@@ -760,11 +799,11 @@ const SFX = (function(){
     setState(on);
     if(on) SFX.power();
   });
-  const hoverSel = 'nav a, .links a, .tag, .ptag, a.proj, .cbtn, #sound-toggle';
+  const hoverSel = 'nav a, .links a, .tag, .ptag, a.proj, .proj-links a, .cbtn, #sound-toggle';
   document.querySelectorAll(hoverSel).forEach(el=>{
     el.addEventListener('mouseenter', ()=>SFX.hover());
   });
-  document.querySelectorAll('nav a, .links a, a.proj, .cbtn').forEach(el=>{
+  document.querySelectorAll('nav a, .links a, a.proj, .proj-links a, .cbtn').forEach(el=>{
     el.addEventListener('click', ()=>SFX.click());
   });
 })();
